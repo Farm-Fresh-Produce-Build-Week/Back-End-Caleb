@@ -40,8 +40,16 @@ router.post("/login", (req, res) => {
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
         const token = genToken(user);
+        const { id, username, city, state, zipCode, profileImgURL } = user;
         res.status(200).json({
-          user,
+          user: {
+            id,
+            username,
+            city,
+            state,
+            zipCode,
+            profileImgURL
+          },
           token,
           message: `Welcome back ${user.username}`
         });
@@ -70,7 +78,33 @@ router.get("/:id", restricted, (req, res) => {
     .catch(err => {
       res
         .status(500)
-        .json({ errorMessage: "Unable to access users database!" });
+        .json({ errorMessage: "Unable to access farmer database!" });
+    });
+});
+router.get("/:id/reviews", restricted, (req, res) => {
+  const { id } = req.params;
+  Farmers.findById(id)
+    .then(user => {
+      Farmers.findReviewsById(id)
+        .then(reviews => {
+          if (reviews) {
+          Farmers.findCommentsById(id).then(comments => {
+            res.status(200).json({ user, reviews, comments });
+          });
+          } else {
+            res
+              .status(201)
+              .json({ errorMessage: "That farmer does not have any reviews!" });
+          }
+        })
+        .catch(err => {
+          res.status(500).json({
+            errorMessage: "Unable to access farmers reviews in the database!"
+          });
+        });
+    })
+    .catch(err => {
+      res.status(500).send("It's just not going to work out, sorry.");
     });
 });
 module.exports = router;

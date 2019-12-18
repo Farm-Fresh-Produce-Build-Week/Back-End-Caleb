@@ -40,10 +40,10 @@ router.post("/login", (req, res) => {
     .first()
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
-        // console.log(user);
         const token = genToken(user);
+        const { id, username, city, state, zipCode, profileImgURL } = user;
         res.status(200).json({
-          user,
+          user: { id, username, city, state, zipCode, profileImgURL },
           token,
           message: `Welcome back ${user.username}`
         });
