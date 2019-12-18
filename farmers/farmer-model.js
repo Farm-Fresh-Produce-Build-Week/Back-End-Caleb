@@ -13,30 +13,15 @@ function find() {
 
 function findByName(filter) {
   return db("farmers")
-    .where({username:filter })
-    .first()
-    .select(
-      "id",
-      "username",
-      "city",
-      "state",
-      "zipCode",
-      "profileImgURL"
-    );
+    .where({ username: filter })
+    .first();
 }
 
 function findById(id) {
   return db("farmers")
     .where({ id })
     .first()
-    .select(
-      "id",
-      "username",
-      "city",
-      "state",
-      "zipCode",
-      "profileImgURL"
-    );
+    .select("id", "username", "city", "state", "zipCode", "profileImgURL");
 }
 
 async function insert(user) {

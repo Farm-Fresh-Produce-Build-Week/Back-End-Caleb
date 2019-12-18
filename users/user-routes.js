@@ -5,7 +5,7 @@ const express = require("express"),
   secrets = require("../config/secrets.js"),
   restricted = require("../middleware/auth-middleware.js"),
   router = express.Router();
-router.get("/", (req, res) => {
+router.get("/", restricted, (req, res) => {
   Users.find()
     .then(users => {
       res.status(200).json(users);
@@ -37,16 +37,10 @@ router.post("/register", (req, res) => {
 router.post("/login", (req, res) => {
   const { username, password } = req.body;
   Users.findByName(username)
+    .first()
     .then(user => {
-      console.log(user);
-      if (user && user.id > 4 && bcrypt.compareSync(password, user.password)) {
-        const token = genToken(user);
-        res.status(200).json({
-          user,
-          token,
-          message: `Welcome back ${user.username}`
-        });
-      } else if (user && user.id < 5 && password == "lambda") {
+      if (user && bcrypt.compareSync(password, user.password)) {
+        // console.log(user);
         const token = genToken(user);
         res.status(200).json({
           user,
@@ -65,7 +59,7 @@ router.post("/login", (req, res) => {
         .json({ errorMessage: "Unable to find user in database!" });
     });
 });
-router.get("/:id", (req, res) => {
+router.get("/:id", restricted, (req, res) => {
   const { id } = req.params;
   Users.findById(id)
     .then(user => {
@@ -85,7 +79,7 @@ router.get("/:id", (req, res) => {
 module.exports = router;
 function genToken(user) {
   const payload = {
-    userid: user.id,
+    subject: user.id,
     username: user.username
   };
   const options = { expiresIn: "7d" };

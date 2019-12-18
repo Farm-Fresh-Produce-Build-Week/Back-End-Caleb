@@ -13,6 +13,11 @@ module.exports = (req, res, next) => {
       }
     });
   } else {
-    res.status(401).json({ you: "can't touch that!" });
+    res
+      .status(401)
+      .json({
+        you: "can't touch that!",
+        suggestion: "Login or Signup to view this information"
+      });
   }
 };

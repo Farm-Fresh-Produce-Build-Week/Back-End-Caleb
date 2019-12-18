@@ -1,8 +1,9 @@
 const express = require("express"),
   Produce = require("./produce-model"),
+  restricted=require('../middleware/auth-middleware.js'),
   router = express.Router();
 
-router.get("/", (req, res) => {
+router.get("/", restricted, (req, res) => {
   Produce.find()
     .then(produce => {
       res.status(200).json(produce);
@@ -13,7 +14,7 @@ router.get("/", (req, res) => {
         .json({ errorMessage: "Unable to access produce database!" });
     });
 });
-router.get("/:id", (req, res) => {
+router.get("/:id", restricted, (req, res) => {
   Produce.findById(req.params.id)
     .then(produce => {
       if (produce.length > 0) {

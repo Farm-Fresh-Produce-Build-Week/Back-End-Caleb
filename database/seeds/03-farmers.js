@@ -1,3 +1,5 @@
+const bcrypt = require("bcryptjs");
+
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
   return knex("farmers")
@@ -7,7 +9,7 @@ exports.seed = function(knex, Promise) {
       return knex("farmers").insert([
         {
           username: "Farmer Caleb",
-          password: "lambda",
+          password: bcrypt.hashSync("lambda", 10),
           city: "Tempe Town Lake",
           state: "Arizona",
           zipCode: "85282",
@@ -16,7 +18,7 @@ exports.seed = function(knex, Promise) {
         },
         {
           username: "Farmer Chris",
-          password: "lambda",
+          password: bcrypt.hashSync("lambda", 10),
           city: "Orange County Naples",
           state: "California",
           zipCode: "90620",
@@ -25,7 +27,7 @@ exports.seed = function(knex, Promise) {
         },
         {
           username: "Farmer Logan",
-          password: "lambda",
+          password: bcrypt.hashSync("lambda", 10),
           city: "Seattle Seasucks",
           state: "Washington",
           zipCode: "98101",
@@ -34,7 +36,7 @@ exports.seed = function(knex, Promise) {
         },
         {
           username: "Farmer Carlos",
-          password: "lambda",
+          password: bcrypt.hashSync("lambda", 10),
           city: "Miami Vice",
           state: "Florida",
           zipCode: "33101",

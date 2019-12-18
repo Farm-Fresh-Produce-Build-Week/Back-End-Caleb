@@ -13,9 +13,8 @@ function find() {
 
 function findByName(filter) {
   return db("users")
-    .where({ username:filter })
-    .first()
-    .select("id", "username", "city", "state", "zipCode", "profileImgURL");
+    .where({ username: filter })
+    .first();
 }
 
 function findById(id) {

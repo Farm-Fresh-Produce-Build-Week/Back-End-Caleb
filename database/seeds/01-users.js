@@ -1,14 +1,14 @@
+const bcrypt=require('bcryptjs');
 exports.seed = function(knex, Promise) {
   // Deletes ALL existing entries
   return knex("users")
     .truncate()
     .then(function() {
       // Inserts seed entries
-      const hash = "lambda";
       return knex("users").insert([
         {
           username: "Caleb",
-          password: 'lambda',
+          password: bcrypt.hashSync("lambda", 10),
           city: "Tempe Town Lake",
           state: "Arizona",
           zipCode: "85282",
@@ -17,16 +17,16 @@ exports.seed = function(knex, Promise) {
         },
         {
           username: "Chris",
-          password: hash,
+          password: bcrypt.hashSync("lambda", 10),
           city: "Orange County Naples",
           state: "California",
           zipCode: "90620",
-           profileImgURL:
+          profileImgURL:
             "https://images.unsplash.com/photo-1541418950054-c12804e149d9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9"
         },
         {
           username: "Logan",
-          password: hash,
+          password: bcrypt.hashSync("lambda", 10),
           city: "Seattle Seasucks",
           state: "Washington",
           zipCode: "98101",
@@ -35,7 +35,7 @@ exports.seed = function(knex, Promise) {
         },
         {
           username: "Carlos",
-          password: hash,
+          password: bcrypt.hashSync("lambda", 10),
           city: "Miami Vice",
           state: "Florida",
           zipCode: "33101",
