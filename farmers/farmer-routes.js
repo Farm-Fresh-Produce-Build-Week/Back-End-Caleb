@@ -88,9 +88,13 @@ router.get("/:id/reviews", restricted, (req, res) => {
       Farmers.findReviewsById(id)
         .then(reviews => {
           if (reviews) {
-          Farmers.findCommentsById(id).then(comments => {
-            res.status(200).json({ user, reviews, comments });
-          });
+            user.reviews = reviews;
+            Farmers.findCommentsById(id).then(comments => {
+              if (comments) {
+                user.comments = comments;
+              }
+              res.status(200).json({ user });
+            });
           } else {
             res
               .status(201)

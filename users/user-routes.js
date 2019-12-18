@@ -63,7 +63,7 @@ router.get("/:id", restricted, (req, res) => {
   const { id } = req.params;
   Users.findById(id)
     .then(user => {
-      console.log(user);
+      // console.log(user);
       if (user) {
         res.status(200).json(user);
       } else {
