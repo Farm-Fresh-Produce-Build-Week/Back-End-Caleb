@@ -29,11 +29,12 @@ async function insert(user) {
   return findById(id);
 }
 
-function update(id, user) {
-  return db("users")
+async function update(id, user) {
+  await db("users")
     .where({ id })
     .first()
     .update(user);
+  return findById(id);
 }
 
 function remove(id) {

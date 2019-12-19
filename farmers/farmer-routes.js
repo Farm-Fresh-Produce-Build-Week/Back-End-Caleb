@@ -31,7 +31,12 @@ router.post("/register", (req, res) => {
       });
     })
     .catch(err => {
-      res.status(500).json({ errorMessage: "Unable to add user to database!" });
+      res
+        .status(500)
+        .json({
+          errorMessage:
+            "Unable to add user to database! That username might already be taken."
+        });
     });
 });
 router.post("/login", (req, res) => {
@@ -111,6 +116,49 @@ router.get("/:id/reviews", restricted, (req, res) => {
       res.status(500).send("It's just not going to work out, sorry.");
     });
 });
+router.put("/:id", restricted, (req, res) => {
+  const editFarmer = req.body;
+  const id = req.params.id;
+if(editFarmer.password){
+  const hash=bcrypt.hashSync(editFarmer.password, 10);
+  editFarmer.password=hash;
+}
+  Farmers.update(id, editFarmer)
+    .then(farmer => {
+      res.status(200).json({
+        message: `Successfully updated ${farmer.username} in the database`,
+        farmer
+      });
+    })
+    .catch(() => {
+      res
+        .status(500)
+        .json({ errorMessage: "Unable to update farmer in the database!" });
+    });
+});
+router.delete("/:id", restricted, (req, res) => {
+  const id = req.params.id;
+
+  Farmers.remove(id)
+    .then(farmer => {
+      if (farmer) {
+        res.status(201).json({
+          message: `Successfully removed farmer #${id} from the database.`
+        });
+      } else {
+        res.status(500).json({
+          errorMessage:
+            "That farmer can't be removed from the database because they cannot be found."
+        });
+      }
+    })
+    .catch(() => {
+      res.status(500).json({
+        errorMessage: "Unable to remove that farmer from the database."
+      });
+    });
+});
+
 module.exports = router;
 function genToken(user) {
   const payload = {

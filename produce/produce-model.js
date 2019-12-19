@@ -5,11 +5,15 @@ function find() {
 }
 
 function findBy(filter) {
-  return db("produce").where(filter);
+  return db("produce")
+    .where(filter)
+    .first();
 }
 
 function findById(id) {
-  return db("produce").where({ id });
+  return db("produce")
+    .where({ id })
+    .first();
 }
 // function findVendors(id) {
 //   return db("users_produce as u_p")
@@ -21,15 +25,17 @@ function findById(id) {
 //     .where("u.farmer", 1);
 // }
 
-async function insert(user) {
-  const [id] = await db("produce").insert(user);
+async function insert(item) {
+  const [id] = await db("produce").insert(item);
   return findById(id);
 }
 
-function update(id, user) {
-  return db("produce")
+async function update(id, item) {
+  await db("produce")
     .where({ id })
-    .update(user);
+    .first()
+    .update(item);
+  return findById(id);
 }
 
 function remove(id) {

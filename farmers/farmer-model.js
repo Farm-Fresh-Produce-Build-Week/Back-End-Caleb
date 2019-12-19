@@ -53,11 +53,12 @@ async function insert(user) {
   return findById(id);
 }
 
-function update(id, user) {
-  return db("farmers")
+async function update(id, user) {
+  await db("farmers")
     .where({ id })
     .first()
     .update(user);
+  return findById(id);
 }
 
 function remove(id) {

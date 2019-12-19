@@ -76,6 +76,49 @@ router.get("/:id", restricted, (req, res) => {
         .json({ errorMessage: "Unable to access users database!" });
     });
 });
+router.put("/:id", restricted, (req, res) => {
+  const editUser = req.body;
+  const id = req.params.id;
+  if (editUser.password) {
+    const hash = bcrypt.hashSync(editUser.password, 10);
+    editUser.password = hash;
+  }
+  Users.update(id, editUser)
+    .then(user => {
+      res.status(200).json({
+        message: `Successfully updated ${user.username} in the database`,
+        user
+      });
+    })
+    .catch(() => {
+      res
+        .status(500)
+        .json({ errorMessage: "Unable to update user in the database!" });
+    });
+});
+router.delete("/:id", restricted, (req, res) => {
+  const id = req.params.id;
+
+  Users.remove(id)
+    .then(user => {
+      if (user) {
+        res.status(201).json({
+          message: `Successfully removed user #${id} from the database.`
+        });
+      } else {
+        res.status(500).json({
+          errorMessage:
+            "That user can't be removed from the database because they cannot be found."
+        });
+      }
+    })
+    .catch(() => {
+      res.status(500).json({
+        errorMessage: "Unable to remove that user from the database."
+      });
+    });
+});
+
 module.exports = router;
 function genToken(user) {
   const payload = {
