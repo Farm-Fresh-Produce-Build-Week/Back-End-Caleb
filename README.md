@@ -1,35 +1,6 @@
 # API SERVER FOR LAMBDA SCHOOL BUILD WEEK
 
-## ROUTES:
-
-### /api
-
-#### Basic API Documentation page
-
-### /api/users
-
-#### Routes for user links
-
-#### /api/users/
-
-##### Returns a list of all users info except their password
-
-#### /api/users/:id
-
-##### Returns info for an individual user
-
-### /api/produce
-
-#### Routes for produce links
-
-#### /api/produce/
-
-##### Returns a list of all produce info
-
-#### /api/produce/:id
-
-##### Returns info for an individual produce
-
+## API DOCUMENTATION HOSTED BY POSTMAN: https://documenter.getpostman.com/view/9266056/SWEDyEJi?version=latest
 
 # Farm Fresh Produce
 
