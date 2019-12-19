@@ -13,9 +13,8 @@ function find() {
 
 function findByName(filter) {
   return db("users")
-    .where({ username:filter })
-    .first()
-    .select("id", "username", "city", "state", "zipCode", "profileImgURL");
+    .where({ username: filter })
+    .first();
 }
 
 function findById(id) {
@@ -30,11 +29,12 @@ async function insert(user) {
   return findById(id);
 }
 
-function update(id, user) {
-  return db("users")
+async function update(id, user) {
+  await db("users")
     .where({ id })
     .first()
     .update(user);
+  return findById(id);
 }
 
 function remove(id) {
