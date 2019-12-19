@@ -10,7 +10,7 @@ exports.up = function(knex) {
       tbl.string("city", 128).notNullable();
       tbl.string("state", 128).notNullable();
       tbl.integer("zipCode", 5).notNullable();
-      tbl.string("profileImgURL", 128);
+      tbl.text("profileImgURL");
     })
     .createTable("produce", tbl => {
       tbl.increments("id");
@@ -18,8 +18,8 @@ exports.up = function(knex) {
         .string("name", 128)
         .unique()
         .notNullable();
-      tbl.string("description", 128);
-      tbl.string("produceImgURL", 128);
+      tbl.string("description");
+      tbl.text("produceImgURL");
     })
     .createTable("farmers", tbl => {
       tbl.increments("id");
@@ -31,8 +31,8 @@ exports.up = function(knex) {
       tbl.string("city", 128).notNullable();
       tbl.string("state", 128).notNullable();
       tbl.integer("zipCode", 5).notNullable();
-      tbl.string("profileImgURL", 128);
-      tbl.string("farmImgURL", 128);
+      tbl.text("profileImgURL");
+      tbl.text("farmImgURL");
     })
     .createTable("farmers_produce", tbl => {
       tbl
@@ -128,11 +128,47 @@ exports.up = function(knex) {
         .onDelete("CASCADE");
       tbl.timestamp("created_at", { useTz: true }).defaultTo(knex.fn.now());
       tbl.string("comment").notNullable();
+    })
+    .createTable("blogs", tbl => {
+      tbl.increments();
+      tbl
+        .integer("farmer_id")
+        .references("id")
+        .inTable("farmers")
+        .notNullable()
+        .unsigned()
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
+      tbl.timestamp("created_at", { useTz: true }).defaultTo(knex.fn.now());
+      tbl.text("post").notNullable();
+    })
+    .createTable("blog_comments", tbl => {
+      tbl.increments();
+      tbl
+        .integer("blog_id")
+        .references("id")
+        .inTable("blogs")
+        .notNullable()
+        .unsigned()
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
+      tbl
+        .integer("user_id")
+        .references("id")
+        .inTable("users")
+        .notNullable()
+        .unsigned()
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
+      tbl.timestamp("created_at", { useTz: true }).defaultTo(knex.fn.now());
+      tbl.string("comment").notNullable();
     });
 };
 
 exports.down = function(knex) {
   return knex.schema
+    .dropTableIfExists("blog_comments")
+    .dropTableIfExists("blogs")
     .dropTableIfExists("comments")
     .dropTableIfExists("reviews")
     .dropTableIfExists("users_produce")
