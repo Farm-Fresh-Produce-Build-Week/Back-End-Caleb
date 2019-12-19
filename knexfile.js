@@ -21,13 +21,15 @@ module.exports = {
   },
   production: {
     client: "pg",
-    connection: dbConnection,
+    connection: {database:dbConnection,
+    user:'username',
+  password:'password'},
     useNullAsDefault: true,
     migrations: {
-      directory: "./data/migrations"
+      directory: "./database/migrations"
     },
     seeds: {
-      directory:"./data/seeds"
+      directory:"./database/seeds"
     }
   }
 };
