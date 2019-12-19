@@ -28,11 +28,6 @@ module.exports = {
     },
     seeds: {
       directory: __dirname + "/database/seeds"
-    },
-    pool: {
-      afterCreate: (conn, done) => {
-        conn.run("PRAGMA foreign_keys=ON", done);
-      }
     }
   }
 };
