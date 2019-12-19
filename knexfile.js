@@ -1,5 +1,5 @@
 // Update with your config settings.
-const dbConnection=process.env.DATABASE_URL;
+const dbConnection = process.env.DATABASE_URL;
 
 require("dotenv").config();
 module.exports = {
@@ -27,7 +27,12 @@ module.exports = {
       directory: __dirname + "/database/migrations"
     },
     seeds: {
-      directory:__dirname + "/database/seeds"
+      directory: __dirname + "/database/seeds"
+    },
+    pool: {
+      afterCreate: (conn, done) => {
+        conn.run("PRAGMA foreign_keys=ON", done);
+      }
     }
   }
 };
