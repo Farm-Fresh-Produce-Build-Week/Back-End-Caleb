@@ -3,7 +3,7 @@ const express = require("express"),
   restricted = require("../middleware/auth-middleware.js"),
   router = express.Router();
 
-router.get("/", restricted, (req, res) => {
+router.get("/", (req, res) => {
   Produce.find()
     .then(produce => {
       res.status(200).json(produce);
@@ -14,7 +14,7 @@ router.get("/", restricted, (req, res) => {
         .json({ errorMessage: "Unable to access produce database!" });
     });
 });
-router.get("/:id", restricted, (req, res) => {
+router.get("/:id", (req, res) => {
   Produce.findById(req.params.id)
     .then(produce => {
       if (produce) {
@@ -31,23 +31,33 @@ router.get("/:id", restricted, (req, res) => {
 });
 router.post("/", (req, res) => {
   const newItem = req.body;
+  // console.log({name:newItem.name})
   Produce.insert(newItem)
     .then(item => {
-      res.status(200).json({
-        message: `Successfully added ${item.name} to the database`,
-        item
-      });
+      // console.log(`Item added with id of ${item}`)
+      Produce.findBy({name:newItem.name})
+        .then(savedItem => {
+          // console.log(`Found item by name of:${savedItem.name}`)
+          res.status(200).json({
+            message: `Successfully added ${savedItem.name} to the database`,
+            savedItem
+          });
+        })
+        .catch(err => {
+          res.status(500).json({
+            errorMessage:
+              "Unable to find new produce by checking the name selected"
+          });
+        });
     })
     .catch(() => {
-      res
-        .status(500)
-        .json({
-          errorMessage:
-            "Unable to add produce to the database! Make sure that item doesn't already exist by checking the name"
-        });
+      res.status(500).json({
+        errorMessage:
+          "Unable to add produce to the database! Make sure that item doesn't already exist by checking the name"
+      });
     });
 });
-router.put("/:id", (req, res) => {
+router.put("/:id", restricted, (req, res) => {
   const editItem = req.body;
   const id = req.params.id;
 
@@ -64,7 +74,7 @@ router.put("/:id", (req, res) => {
         .json({ errorMessage: "Unable to update produce in the database!" });
     });
 });
-router.delete("/:id", (req, res) => {
+router.delete("/:id", restricted, (req, res) => {
   const id = req.params.id;
 
   Produce.remove(id)

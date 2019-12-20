@@ -1,5 +1,5 @@
 // Update with your config settings.
-const dbConnection=process.env.DATABASE_URL;
+const dbConnection = process.env.DATABASE_URL;
 
 require("dotenv").config();
 module.exports = {
@@ -24,10 +24,10 @@ module.exports = {
     connection: dbConnection,
     useNullAsDefault: true,
     migrations: {
-      directory: "./data/migrations"
+      directory: __dirname + "/database/migrations"
     },
     seeds: {
-      directory: "./data/seeds"
+      directory: __dirname + "/database/seeds"
     }
   }
 };

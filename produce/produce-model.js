@@ -9,6 +9,12 @@ function findBy(filter) {
     .where(filter)
     .first();
 }
+function findByName(filter) {
+  // console.log(`Find by name triggered with name:${filter}`);
+  return db("produce")
+    .where({ name: filter })
+    .first();
+}
 
 function findById(id) {
   return db("produce")
@@ -25,9 +31,12 @@ function findById(id) {
 //     .where("u.farmer", 1);
 // }
 
-async function insert(item) {
-  const [id] = await db("produce").insert(item);
-  return findById(id);
+// async function insert(item) {
+function insert(item) {
+  // console.log("insert function triggered");
+  // const [id] = await db("produce").insert(item);
+  // return findById(id);
+  return db("produce").insert(item);
 }
 
 async function update(id, item) {
@@ -42,4 +51,4 @@ function remove(id) {
   return findById(id).del();
 }
 
-module.exports = { find, findBy, findById, insert, update, remove };
+module.exports = { find, findBy, findByName, findById, insert, update, remove };
