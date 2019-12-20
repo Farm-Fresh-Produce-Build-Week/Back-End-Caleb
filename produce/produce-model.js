@@ -10,7 +10,7 @@ function findBy(filter) {
     .first();
 }
 function findByName(filter) {
-  console.log(`Find by name triggered with name:${filter}`);
+  // console.log(`Find by name triggered with name:${filter}`);
   return db("produce")
     .where({ name: filter })
     .first();
@@ -33,7 +33,7 @@ function findById(id) {
 
 // async function insert(item) {
 function insert(item) {
-  console.log("insert function triggered");
+  // console.log("insert function triggered");
   // const [id] = await db("produce").insert(item);
   // return findById(id);
   return db("produce").insert(item);

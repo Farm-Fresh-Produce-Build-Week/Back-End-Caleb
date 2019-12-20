@@ -31,13 +31,13 @@ router.get("/:id", (req, res) => {
 });
 router.post("/", (req, res) => {
   const newItem = req.body;
-  console.log({name:newItem.name})
+  // console.log({name:newItem.name})
   Produce.insert(newItem)
     .then(item => {
-      console.log(`Item added with id of ${item}`)
-      Produce.findByName(newItem.name)
+      // console.log(`Item added with id of ${item}`)
+      Produce.findBy({name:newItem.name})
         .then(savedItem => {
-          console.log(`Found item by name of:${savedItem.name}`)
+          // console.log(`Found item by name of:${savedItem.name}`)
           res.status(200).json({
             message: `Successfully added ${savedItem.name} to the database`,
             savedItem
