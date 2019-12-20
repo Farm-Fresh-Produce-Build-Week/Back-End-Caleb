@@ -13,7 +13,10 @@ exports.up = function(knex) {
       tbl.text("profileImgURL");
     })
     .createTable("produce", tbl => {
-      tbl.increments("id");
+      tbl
+        .integer("PLU", 5)
+        .unique()
+        .notNullable();
       tbl
         .string("name", 128)
         .unique()
@@ -35,6 +38,7 @@ exports.up = function(knex) {
       tbl.text("farmImgURL");
     })
     .createTable("farmers_produce", tbl => {
+      tbl.integer("SKU").unique();
       tbl
         .integer("farmer_id")
         .references("id")
@@ -44,16 +48,23 @@ exports.up = function(knex) {
         .onUpdate("CASCADE")
         .onDelete("CASCADE");
       tbl
-        .integer("produce_id")
-        .references("id")
+        .integer("PLU")
+        .references("PLU")
         .inTable("produce")
         .notNullable()
         .unsigned()
         .onUpdate("CASCADE")
         .onDelete("CASCADE");
-      tbl.integer("quantity").unsigned();
-      tbl.float("price").unsigned();
-      tbl.primary(["farmer_id", "produce_id"]);
+      tbl
+        .integer("quantity")
+        .unsigned()
+        .notNullable();
+      tbl.string("increment", 128).notNullable();
+      tbl
+        .float("price")
+        .unsigned()
+        .notNullable();
+      tbl.primary(["farmer_id", "PLU"]);
     })
     .createTable("users_produce", tbl => {
       tbl
@@ -65,17 +76,9 @@ exports.up = function(knex) {
         .onUpdate("CASCADE")
         .onDelete("CASCADE");
       tbl
-        .integer("produce_id")
-        .references("id")
-        .inTable("produce")
-        .notNullable()
-        .unsigned()
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
-      tbl
-        .integer("farmer_id")
-        .references("id")
-        .inTable("farmers")
+        .integer("SKU")
+        .references("SKU")
+        .inTable("farmers_produce")
         .notNullable()
         .unsigned()
         .onUpdate("CASCADE")
@@ -84,7 +87,7 @@ exports.up = function(knex) {
         .integer("quantity")
         .unsigned()
         .notNullable();
-      tbl.primary(["user_id", "produce_id", "farmer_id"]);
+      tbl.primary(["user_id", "SKU"]);
     })
     .createTable("reviews", tbl => {
       tbl.increments();
