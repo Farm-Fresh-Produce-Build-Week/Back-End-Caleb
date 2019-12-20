@@ -9,6 +9,11 @@ function findBy(filter) {
     .where(filter)
     .first();
 }
+function findByName(filter) {
+  return db("produce")
+    .where({ name: filter })
+    .first();
+}
 
 function findById(id) {
   return db("produce")
@@ -44,4 +49,4 @@ function remove(id) {
   return findById(id).del();
 }
 
-module.exports = { find, findBy, findById, insert, update, remove };
+module.exports = { find, findBy, findByName, findById, insert, update, remove };

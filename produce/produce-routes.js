@@ -33,7 +33,7 @@ router.post("/", (req, res) => {
   const newItem = req.body;
   Produce.insert(newItem)
     .then(item => {
-      Produce.findBy({ name: newItem.name })
+      Produce.findByName(newItem.name)
         .then(savedItem => {
           res.status(200).json({
             message: `Successfully added ${savedItem.name} to the database`,
