@@ -167,13 +167,13 @@ exports.up = function(knex) {
 
 exports.down = function(knex) {
   return knex.schema
-    .dropTableIfExists("blog_comments")
-    .dropTableIfExists("blogs")
-    .dropTableIfExists("comments")
-    .dropTableIfExists("reviews")
-    .dropTableIfExists("users_produce")
-    .dropTableIfExists("farmers_produce")
-    .dropTableIfExists("farmers")
-    .dropTableIfExists("produce")
-    .dropTableIfExists("users");
+    .dropTable("blog_comments")
+    .dropTable("blogs")
+    .dropTable("comments")
+    .dropTable("reviews")
+    .dropTable("users_produce")
+    .dropTable("farmers_produce")
+    .dropTable("farmers")
+    .dropTable("produce")
+    .dropTable("users");
 };

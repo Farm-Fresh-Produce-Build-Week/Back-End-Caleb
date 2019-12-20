@@ -47,7 +47,7 @@ router.post("/", (req, res) => {
         });
     });
 });
-router.put("/:id", (req, res) => {
+router.put("/:id", restricted, (req, res) => {
   const editItem = req.body;
   const id = req.params.id;
 
@@ -64,7 +64,7 @@ router.put("/:id", (req, res) => {
         .json({ errorMessage: "Unable to update produce in the database!" });
     });
 });
-router.delete("/:id", (req, res) => {
+router.delete("/:id", restricted, (req, res) => {
   const id = req.params.id;
 
   Produce.remove(id)

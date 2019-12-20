@@ -20,10 +20,14 @@ router.post("/register", (req, res) => {
   const { username, password, profileImgURL, city, state, zipCode } = req.body;
   const user = { username, profileImgURL, city, state, zipCode };
   const hash = bcrypt.hashSync(password, 10);
+  console.log({ password, hash });
   user.password = hash;
+  console.log({ userPassword: user.password });
   Users.insert(user)
     .then(saved => {
+      console.log({ saved });
       const token = genToken(saved);
+      console.log({ token });
       res.status(200).json({
         saved,
         token,
@@ -63,7 +67,6 @@ router.get("/:id", restricted, (req, res) => {
   const { id } = req.params;
   Users.findById(id)
     .then(user => {
-      // console.log(user);
       if (user) {
         res.status(200).json(user);
       } else {
