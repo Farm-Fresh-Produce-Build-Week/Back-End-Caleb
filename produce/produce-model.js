@@ -25,9 +25,11 @@ function findById(id) {
 //     .where("u.farmer", 1);
 // }
 
-async function insert(item) {
-  const [id] = await db("produce").insert(item);
-  return findById(id);
+// async function insert(item) {
+function insert(item) {
+  // const [id] = await db("produce").insert(item);
+  // return findById(id);
+  return db("produce").insert(item);
 }
 
 async function update(id, item) {

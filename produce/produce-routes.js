@@ -33,18 +33,25 @@ router.post("/", (req, res) => {
   const newItem = req.body;
   Produce.insert(newItem)
     .then(item => {
-      res.status(200).json({
-        message: `Successfully added ${item.name} to the database`,
-        item
-      });
+      Produce.findBy({ name: newItem.name })
+        .then(savedItem => {
+          res.status(200).json({
+            message: `Successfully added ${savedItem.name} to the database`,
+            savedItem
+          });
+        })
+        .catch(err => {
+          res.status(500).json({
+            errorMessage:
+              "Unable to find new produce by checking the name selected"
+          });
+        });
     })
     .catch(() => {
-      res
-        .status(500)
-        .json({
-          errorMessage:
-            "Unable to add produce to the database! Make sure that item doesn't already exist by checking the name"
-        });
+      res.status(500).json({
+        errorMessage:
+          "Unable to add produce to the database! Make sure that item doesn't already exist by checking the name"
+      });
     });
 });
 router.put("/:id", restricted, (req, res) => {

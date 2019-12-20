@@ -48,9 +48,11 @@ function findCommentsById(id) {
     .orderBy("r.id");
 }
 
-async function insert(user) {
-  const [id] = await db("farmers").insert(user);
-  return findById(id);
+// async function insert(user) {
+function insert(user) {
+  // const [id] = await db("farmers").insert(user);
+  // return findById(id);
+  return db("farmers").insert(user);
 }
 
 async function update(id, user) {

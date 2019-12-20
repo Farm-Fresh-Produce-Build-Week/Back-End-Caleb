@@ -12,7 +12,7 @@ function find() {
 }
 
 function findByName(filter) {
-  console.log(`Attempting to findByName of: ${filter}`);
+  // console.log(`Attempting to findByName of: ${filter}`);
   return db("users")
     .where({ username: filter })
     .first();
@@ -21,7 +21,7 @@ function findByName(filter) {
 function findById(id) {
   // console.log(`Made it to the findById stage for ${id}`);
   return db("users")
-    .where({ id: id })
+    .where({ id })
     .first()
     .select("id", "username", "city", "state", "zipCode", "profileImgURL");
 }

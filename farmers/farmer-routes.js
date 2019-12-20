@@ -23,20 +23,27 @@ router.post("/register", (req, res) => {
   user.password = hash;
   Farmers.insert(user)
     .then(saved => {
-      const token = genToken(saved);
-      res.status(200).json({
-        saved,
-        token,
-        message: `Welcome to the group ${saved.username}`
-      });
+      Farmers.findByName(user.username)
+        .then(newFarmer => {
+          const token = genToken(newFarmer);
+          res.status(200).json({
+            newFarmer,
+            token,
+            message: `Welcome to the group ${newFarmer.username}`
+          });
+        })
+        .catch(err => {
+          res.status(500).json({
+            errorMessage:
+              "Unable to find new farmer by their username in the database!"
+          });
+        });
     })
     .catch(err => {
-      res
-        .status(500)
-        .json({
-          errorMessage:
-            "Unable to add user to database! That username might already be taken."
-        });
+      res.status(500).json({
+        errorMessage:
+          "Unable to add user to database! That username might already be taken."
+      });
     });
 });
 router.post("/login", (req, res) => {
@@ -119,10 +126,10 @@ router.get("/:id/reviews", restricted, (req, res) => {
 router.put("/:id", restricted, (req, res) => {
   const editFarmer = req.body;
   const id = req.params.id;
-if(editFarmer.password){
-  const hash=bcrypt.hashSync(editFarmer.password, 10);
-  editFarmer.password=hash;
-}
+  if (editFarmer.password) {
+    const hash = bcrypt.hashSync(editFarmer.password, 10);
+    editFarmer.password = hash;
+  }
   Farmers.update(id, editFarmer)
     .then(farmer => {
       res.status(200).json({

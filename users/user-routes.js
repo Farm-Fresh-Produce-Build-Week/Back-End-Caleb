@@ -29,9 +29,9 @@ router.post("/register", (req, res) => {
       // console.log(saved[0]);
       Users.findByName(user.username)
         .then(newUser => {
-          console.log({ newUser });
-          const token = genToken(saved);
-          console.log({ token });
+          // console.log({ newUser });
+          const token = genToken(newUser);
+          // console.log({ token });
           res.status(200).json({
             newUser,
             token,
@@ -40,12 +40,18 @@ router.post("/register", (req, res) => {
         })
         .catch(err => {
           res.status(500).json({
-            errorMessage: "Unable to find new user by their id in the database!"
+            errorMessage:
+              "Unable to find new user by their username in the database!"
           });
         });
     })
     .catch(err => {
-      res.status(500).json({ errorMessage: "Unable to add user to database!" });
+      res
+        .status(500)
+        .json({
+          errorMessage:
+            "Unable to add user to database! That username might already be taken."
+        });
     });
 });
 router.post("/login", (req, res) => {
