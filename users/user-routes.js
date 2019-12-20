@@ -26,6 +26,7 @@ router.post("/register", (req, res) => {
   Users.insert(user)
     .then(saved => {
       console.log(saved);
+      console.log(saved[0]);
       Users.findById(saved[0])
         .then(newUser => {
           console.log({ newUser });

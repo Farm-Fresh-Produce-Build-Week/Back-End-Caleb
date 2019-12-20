@@ -18,17 +18,19 @@ function findByName(filter) {
 }
 
 function findById(id) {
+  console.log(`Made it to the findById stage for ${id}`);
   return db("users")
-    .where({ id })
+    .where({ id: id })
     .first()
     .select("id", "username", "city", "state", "zipCode", "profileImgURL");
 }
 
 // async function insert(user) {
 function insert(user) {
+  console.log(user);
   // const [id] = await db("users").insert(user);
   // return findById(id);
-  return db('users').insert(user);
+  return db("users").insert(user);
 }
 
 async function update(id, user) {
