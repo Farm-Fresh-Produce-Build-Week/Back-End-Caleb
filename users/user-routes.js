@@ -46,12 +46,10 @@ router.post("/register", (req, res) => {
         });
     })
     .catch(err => {
-      res
-        .status(500)
-        .json({
-          errorMessage:
-            "Unable to add user to database! That username might already be taken."
-        });
+      res.status(500).json({
+        errorMessage:
+          "Unable to add user to database! That username might already be taken."
+      });
     });
 });
 router.post("/login", (req, res) => {
@@ -80,6 +78,7 @@ router.post("/login", (req, res) => {
     });
 });
 router.get("/:id", restricted, (req, res) => {
+  console.log(req.decodedJwt);
   const { id } = req.params;
   Users.findById(id)
     .then(user => {
@@ -95,7 +94,7 @@ router.get("/:id", restricted, (req, res) => {
         .json({ errorMessage: "Unable to access users database!" });
     });
 });
-router.put("/:id", restricted, (req, res) => {
+router.put("/:id", restricted, roleCheck, idCheck, (req, res) => {
   const editUser = req.body;
   const id = req.params.id;
   if (editUser.password) {
@@ -115,7 +114,7 @@ router.put("/:id", restricted, (req, res) => {
         .json({ errorMessage: "Unable to update user in the database!" });
     });
 });
-router.delete("/:id", restricted, (req, res) => {
+router.delete("/:id", restricted, roleCheck, idCheck, (req, res) => {
   const id = req.params.id;
 
   Users.remove(id)
@@ -141,10 +140,33 @@ router.delete("/:id", restricted, (req, res) => {
 module.exports = router;
 function genToken(user) {
   const payload = {
-    subject: user.id,
-    username: user.username
+    userId: user.id,
+    username: user.username,
+    role: "user"
   };
   const options = { expiresIn: "7d" };
   const token = jwt.sign(payload, secrets.jwtSecret, options);
   return token;
+}
+function roleCheck(req, res, next) {
+  const { role } = req.decodedJwt;
+  if (role == "user") {
+    next();
+  } else {
+    res.status(500).json({
+      errorMessage:
+        "You must be a User to access that information, no Farmer's allowed! Don't make me call the Vegans!"
+    });
+  }
+}
+function idCheck(req, res, next) {
+  const { id } = req.decodedJwt;
+  if (id == req.params.id) {
+    next();
+  } else {
+    res.status(500).json({
+      errorMessage:
+        "You cannot update another User's information, mind your own business!"
+    });
+  }
 }

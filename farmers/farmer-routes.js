@@ -123,7 +123,7 @@ router.get("/:id/reviews", restricted, (req, res) => {
       res.status(500).send("It's just not going to work out, sorry.");
     });
 });
-router.put("/:id", restricted, (req, res) => {
+router.put("/:id", restricted, roleCheck, idCheck, (req, res) => {
   const editFarmer = req.body;
   const id = req.params.id;
   if (editFarmer.password) {
@@ -143,7 +143,7 @@ router.put("/:id", restricted, (req, res) => {
         .json({ errorMessage: "Unable to update farmer in the database!" });
     });
 });
-router.delete("/:id", restricted, (req, res) => {
+router.delete("/:id", restricted, idCheck, (req, res) => {
   const id = req.params.id;
 
   Farmers.remove(id)
@@ -169,10 +169,32 @@ router.delete("/:id", restricted, (req, res) => {
 module.exports = router;
 function genToken(user) {
   const payload = {
-    subject: user.id,
-    username: user.username
+    farmerId: user.id,
+    username: user.username,
+    role: "farmer"
   };
   const options = { expiresIn: "7d" };
   const token = jwt.sign(payload, secrets.jwtSecret, options);
   return token;
+}
+function roleCheck(req, res, next) {
+  const { role } = req.decodedJwt;
+  if (role == "farmer") {
+    next();
+  } else {
+    res.status(500).json({
+      errorMessage: "You must be a Farmer to access that information!"
+    });
+  }
+}
+function idCheck(req, res, next) {
+  const { id } = req.decodedJwt;
+  if (id == req.params.id) {
+    next();
+  } else {
+    res.status(500).json({
+      errorMessage:
+        "You cannot update another Farmer's information, mind your own business!"
+    });
+  }
 }
