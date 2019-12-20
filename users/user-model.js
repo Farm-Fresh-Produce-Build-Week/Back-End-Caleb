@@ -12,13 +12,14 @@ function find() {
 }
 
 function findByName(filter) {
+  console.log(`Attempting to findByName of: ${filter}`);
   return db("users")
     .where({ username: filter })
     .first();
 }
 
 function findById(id) {
-  console.log(`Made it to the findById stage for ${id}`);
+  // console.log(`Made it to the findById stage for ${id}`);
   return db("users")
     .where({ id: id })
     .first()

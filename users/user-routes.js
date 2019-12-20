@@ -25,9 +25,9 @@ router.post("/register", (req, res) => {
   // console.log({ userPassword: user.password });
   Users.insert(user)
     .then(saved => {
-      console.log(saved);
-      console.log(saved[0]);
-      Users.findById(saved[0])
+      // console.log(saved);
+      // console.log(saved[0]);
+      Users.findByName(user.username)
         .then(newUser => {
           console.log({ newUser });
           const token = genToken(saved);
