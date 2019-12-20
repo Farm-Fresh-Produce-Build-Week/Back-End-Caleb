@@ -1,4 +1,4 @@
-exports.up = function(knex) {
+exports.up = function(knex, Promise) {
   return knex.schema
     .createTable("users", tbl => {
       tbl.increments("id");
@@ -51,10 +51,7 @@ exports.up = function(knex) {
         .integer("PLU")
         .references("PLU")
         .inTable("produce")
-        .notNullable()
-        .unsigned()
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
+        .notNullable();
       tbl
         .integer("quantity")
         .unsigned()
@@ -109,7 +106,6 @@ exports.up = function(knex) {
         .onDelete("CASCADE");
       tbl.timestamp("created_at", { useTz: true }).defaultTo(knex.fn.now());
       tbl.string("review").notNullable();
-      // tbl.primary(["farmer_id", "user_id"]);
     })
     .createTable("comments", tbl => {
       tbl.increments();
@@ -168,7 +164,7 @@ exports.up = function(knex) {
     });
 };
 
-exports.down = function(knex) {
+exports.down = function(knex, Promise) {
   return knex.schema
     .dropTable("blog_comments")
     .dropTable("blogs")

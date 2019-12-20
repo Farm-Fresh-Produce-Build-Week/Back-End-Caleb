@@ -1,5 +1,5 @@
 exports.seed = function(knex, Promise) {
-
+// console.log('Produce running');
   // Inserts seed entries
   return knex("produce").insert([
     {
@@ -30,7 +30,7 @@ exports.seed = function(knex, Promise) {
       description: "Aye, what's up DOC?",
       produceImgURL:
         "https://images.unsplash.com/photo-1550081699-79c1c2e48a77?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9",
-      PLU: 40115
+      PLU: 4015
     }
   ]);
 };
