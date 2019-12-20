@@ -20,19 +20,28 @@ router.post("/register", (req, res) => {
   const { username, password, profileImgURL, city, state, zipCode } = req.body;
   const user = { username, profileImgURL, city, state, zipCode };
   const hash = bcrypt.hashSync(password, 10);
-  console.log({ password, hash });
+  // console.log({ password, hash });
   user.password = hash;
-  console.log({ userPassword: user.password });
+  // console.log({ userPassword: user.password });
   Users.insert(user)
     .then(saved => {
-      console.log({ saved });
-      const token = genToken(saved);
-      console.log({ token });
-      res.status(200).json({
-        saved,
-        token,
-        message: `Welcome to the group ${saved.username}`
-      });
+      console.log(saved);
+      Users.findById(saved[0])
+        .then(newUser => {
+          console.log({ newUser });
+          const token = genToken(saved);
+          console.log({ token });
+          res.status(200).json({
+            newUser,
+            token,
+            message: `Welcome to the group ${newUser.username}`
+          });
+        })
+        .catch(err => {
+          res.status(500).json({
+            errorMessage: "Unable to find new user by their id in the database!"
+          });
+        });
     })
     .catch(err => {
       res.status(500).json({ errorMessage: "Unable to add user to database!" });

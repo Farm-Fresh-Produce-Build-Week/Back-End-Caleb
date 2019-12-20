@@ -24,9 +24,11 @@ function findById(id) {
     .select("id", "username", "city", "state", "zipCode", "profileImgURL");
 }
 
-async function insert(user) {
-  const [id] = await db("users").insert(user);
-  return findById(id);
+// async function insert(user) {
+function insert(user) {
+  // const [id] = await db("users").insert(user);
+  // return findById(id);
+  return db('users').insert(user);
 }
 
 async function update(id, user) {
