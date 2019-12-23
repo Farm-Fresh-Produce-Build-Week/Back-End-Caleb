@@ -4,7 +4,8 @@ const express = require("express"),
   jwt = require("jsonwebtoken"),
   secrets = require("../config/secrets.js"),
   restricted = require("../middleware/auth-middleware.js"),
-  router = express.Router();
+  shoppingCart = require("./shoppingCart/routes.js");
+router = express.Router();
 router.get("/", restricted, (req, res) => {
   Users.find()
     .then(users => {
@@ -16,6 +17,7 @@ router.get("/", restricted, (req, res) => {
         .json({ errorMessage: "Unable to access users database!" });
     });
 });
+router.use("/:id/cart", restricted, shoppingCart);
 router.post("/register", (req, res) => {
   const { username, password, profileImgURL, city, state, zipCode } = req.body;
   const user = { username, profileImgURL, city, state, zipCode };
@@ -140,7 +142,7 @@ router.delete("/:id", restricted, roleCheck, idCheck, (req, res) => {
 module.exports = router;
 function genToken(user) {
   const payload = {
-    userId: user.id,
+    id: user.id,
     username: user.username,
     role: "user"
   };
