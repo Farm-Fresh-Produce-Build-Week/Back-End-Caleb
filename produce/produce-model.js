@@ -18,7 +18,7 @@ function findByName(filter) {
 
 function findById(id) {
   return db("produce")
-    .where({ id })
+    .where({ PLU:id })
     .first();
 }
 // function findVendors(id) {
@@ -41,7 +41,7 @@ function insert(item) {
 
 async function update(id, item) {
   await db("produce")
-    .where({ id })
+    .where({ PLU:id })
     .first()
     .update(item);
   return findById(id);
