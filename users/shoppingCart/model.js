@@ -5,7 +5,7 @@ function findByUser(id) {
     .join("farmers_produce as fp", "up.SKU", "fp.SKU")
     .join("produce as p", "fp.PLU", "p.PLU")
     .where({ 'up.user_id': id })
-    .orderBy("SKU");
+    .orderBy("up.SKU");
 }
 
 function findBySKU(id, sku) {
