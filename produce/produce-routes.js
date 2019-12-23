@@ -29,13 +29,13 @@ router.get("/:id", (req, res) => {
         .json({ errorMessage: "Unable to access produce database!" });
     });
 });
-router.post("/", (req, res) => {
+router.post("/", restricted, roleCheck, (req, res) => {
   const newItem = req.body;
   // console.log({name:newItem.name})
   Produce.insert(newItem)
     .then(item => {
       // console.log(`Item added with id of ${item}`)
-      Produce.findBy({name:newItem.name})
+      Produce.findBy({ name: newItem.name })
         .then(savedItem => {
           // console.log(`Found item by name of:${savedItem.name}`)
           res.status(200).json({
@@ -57,7 +57,7 @@ router.post("/", (req, res) => {
       });
     });
 });
-router.put("/:id", restricted, (req, res) => {
+router.put("/:id", restricted, roleCheck, (req, res) => {
   const editItem = req.body;
   const id = req.params.id;
 
@@ -74,7 +74,7 @@ router.put("/:id", restricted, (req, res) => {
         .json({ errorMessage: "Unable to update produce in the database!" });
     });
 });
-router.delete("/:id", restricted, (req, res) => {
+router.delete("/:id", restricted, roleCheck, (req, res) => {
   const id = req.params.id;
 
   Produce.remove(id)
@@ -97,3 +97,14 @@ router.delete("/:id", restricted, (req, res) => {
     });
 });
 module.exports = router;
+
+function roleCheck(req, res, next) {
+  const { role } = req.decodedJwt;
+  if (role == "farmer") {
+    next();
+  } else {
+    res.status(500).json({
+      errorMessage: "You must be a Farmer to access that information!"
+    });
+  }
+}
