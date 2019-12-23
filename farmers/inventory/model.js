@@ -1,21 +1,24 @@
 const db = require("../../database/db-config");
 
 function find() {
-  return db("farmers_produce");
+  return db("farmers_produce as fp").join('produce as p','fp.PLU','p.PLU');
 }
 function findByFarmer(id) {
-  return db("farmers_produce")
-    .where({ farmer_id: id })
+  return db("farmers_produce as fp")
+    .join("produce as p", "fp.PLU", "p.PLU")
+    .where({ 'fp.farmer_id': id })
     .orderBy("SKU");
 }
 function findByPLU(id, plu) {
-  return db("farmers_produce")
-    .where({ PLU: plu, farmer_id: id })
+  return db("farmers_produce as fp")
+    .join("produce as p", "fp.PLU", "p.PLU")
+    .where({ 'fp.PLU': plu, 'fp.farmer_id': id })
     .first();
 }
 function findBySKU(id, sku) {
-  return db("farmers_produce")
-    .where({ farmer_id: id, SKU: sku })
+  return db("farmers_produce as fp")
+    .join("produce as p", "fp.PLU", "p.PLU")
+    .where({ 'fp.farmer_id': id, 'fp.SKU': sku })
     .first();
 }
 // async function insert(user) {

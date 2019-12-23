@@ -1,14 +1,18 @@
 const db = require("../../database/db-config");
 
 function findByUser(id) {
-  return db("users_produce")
-    .where({ user_id: id })
+  return db("users_produce as up")
+    .join("farmers_produce as fp", "up.SKU", "fp.SKU")
+    .join("produce as p", "fp.PLU", "p.PLU")
+    .where({ 'up.user_id': id })
     .orderBy("SKU");
 }
 
 function findBySKU(id, sku) {
-  return db("users_produce")
-    .where({ SKU: sku, user_id: id })
+  return db("users_produce as up")
+    .join("farmers_produce as fp", "up.SKU", "fp.SKU")
+    .join("produce as p", "fp.PLU", "p.PLU")
+    .where({ "up.SKU": sku, "up.user_id": id })
     .first();
 }
 // async function insert(user) {
