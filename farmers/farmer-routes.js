@@ -4,7 +4,9 @@ const express = require("express"),
   jwt = require("jsonwebtoken"),
   secrets = require("../config/secrets.js"),
   restricted = require("../middleware/auth-middleware.js"),
-  router = express.Router();
+  router = express.Router(),
+  inventory=require('./inventory/routes.js');
+
 router.get("/", restricted, (req, res) => {
   Farmers.find()
     .then(users => {
@@ -123,6 +125,7 @@ router.get("/:id/reviews", restricted, (req, res) => {
       res.status(500).send("It's just not going to work out, sorry.");
     });
 });
+router.use('/:id/inventory', inventory);
 router.put("/:id", restricted, roleCheck, idCheck, (req, res) => {
   const editFarmer = req.body;
   const id = req.params.id;
@@ -169,7 +172,7 @@ router.delete("/:id", restricted, idCheck, (req, res) => {
 module.exports = router;
 function genToken(user) {
   const payload = {
-    farmerId: user.id,
+    id: user.id,
     username: user.username,
     role: "farmer"
   };

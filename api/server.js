@@ -4,8 +4,8 @@ const express = require("express"),
   helmet = require("helmet"),
   userRoute = require("../users/user-routes"),
   farmerRoute = require("../farmers/farmer-routes"),
-  produceRoute = require("../produce/produce-routes");
-
+  produceRoute = require("../produce/produce-routes"),
+  Inventory=require('../farmers/inventory/model.js');
 server.use(express.json());
 server.use(helmet());
 server.use(cors());
@@ -27,5 +27,15 @@ server.get("/api", (req, res) => {
 server.use("/api/users", userRoute);
 server.use("/api/farmers", farmerRoute);
 server.use("/api/produce", produceRoute);
-
+server.get("/api/inventory", (req, res) => {
+  Inventory.find()
+    .then(items => {
+      res.status(200).json(items);
+    })
+    .catch(err => {
+      res
+        .status(500)
+        .json({ errorMessage: "Unable to access inventory database!" });
+    });
+});
 module.exports = server;
