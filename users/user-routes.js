@@ -18,7 +18,7 @@ router.get("/", restricted, (req, res) => {
     });
 });
 router.use("/:id/cart", restricted, shoppingCart);
-router.post("/register", (req, res) => {
+router.post("/register", registerCheck, (req, res) => {
   const { username, password, profileImgURL, city, state, zipCode } = req.body;
   const user = { username, profileImgURL, city, state, zipCode };
   const hash = bcrypt.hashSync(password, 10);
@@ -170,5 +170,31 @@ function idCheck(req, res, next) {
       errorMessage:
         "You cannot update another User's information, mind your own business!"
     });
+  }
+}
+function registerCheck(req, res, next) {
+  const { username, password, city, state, zipCode } = req.body;
+  if (username && password && city && state && zipCode) {
+    next();
+  } else if (!username) {
+    res.status(500).json({
+      errorMessage: "A username is required to register a new user"
+    });
+  } else if (!password) {
+    res.status(500).json({
+      errorMessage: "A password is required to register a new user"
+    });
+  } else if (!city) {
+    res
+      .status(500)
+      .json({ errorMessage: "A city is required to register a new user" });
+  } else if (!state) {
+    res
+      .status(500)
+      .json({ errorMessage: "A state is required to register a new user" });
+  } else if (!zipCode) {
+    res
+      .status(500)
+      .json({ errorMessage: "A zipCode is required to register a new user" });
   }
 }

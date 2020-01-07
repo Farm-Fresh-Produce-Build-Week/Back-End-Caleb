@@ -13,7 +13,7 @@ router.get("/", restricted, (req, res) => {
         .json({ errorMessage: "Unable to access inventory database!" });
     });
 });
-router.post("/", restricted, roleCheck, idCheck, (req, res) => {
+router.post("/", restricted, roleCheck, idCheck, newItemParams, (req, res) => {
   const newItem = req.body;
   newItem.farmer_id = req.params.id;
   Inventory.insert(newItem)
@@ -59,7 +59,7 @@ router.get("/PLU/:plu", (req, res) => {
         .json({ errorMessage: "Unable to access farmer inventory!" });
     });
 });
-router.put("/:sku", restricted, roleCheck, idCheck, (req, res) => {
+router.put("/:sku", restricted, roleCheck, idCheck, updateItemParams, (req, res) => {
   const editItem = req.body;
   const sku = req.params.sku;
   editItem.farmer_id = req.params.id;
@@ -78,7 +78,7 @@ router.put("/:sku", restricted, roleCheck, idCheck, (req, res) => {
     });
 });
 router.delete("/:sku", restricted, roleCheck, idCheck, (req, res) => {
-  const {id, sku} = req.params;
+  const { id, sku } = req.params;
 
   Inventory.remove(id, sku)
     .then(inventory => {
@@ -135,5 +135,66 @@ function idCheck(req, res, next) {
       errorMessage:
         "You cannot update another Farmer's information, mind your own business!"
     });
+  }
+}
+function newItemParams(req, res, next) {
+  console.log({
+    SKU: req.body.SKU,
+    PLU: req.body.PLU,
+    Quantity: req.body.quantity,
+    increment: req.body.increment,
+    price: req.body.price
+  });
+  if (req.body.SKU && req.body.PLU && req.body.quantity && req.body.increment && req.body.price) {
+    next();
+  } else if (!req.body.SKU) {
+    res
+      .status(500)
+      .json({
+        errorMessage: "A SKU is required to add an item to your inventory"
+      });
+  } else if (!req.body.PLU) {
+    res
+      .status(500)
+      .json({
+        errorMessage: "A PLU is required to add an item to your inventory"
+      });
+  } else if (!req.body.quantity) {
+    res
+      .status(500)
+      .json({
+        errorMessage: "A quantity is required to add an item to your inventory"
+      });
+  } else if (!req.body.increment) {
+    res
+      .status(500)
+      .json({
+        errorMessage:
+          "An increment is required to add an item to your inventory"
+      });
+  } else if (!req.body.price) {
+    res
+      .status(500)
+      .json({
+        errorMessage: "A price is required to add an item to your inventory"
+      });
+  }
+}
+function updateItemParams(req, res, next) {
+  console.log({
+    SKU: req.body.SKU,
+    PLU: req.body.PLU,
+    Quantity: req.body.quantity,
+    increment: req.body.increment,
+    price: req.body.price
+  });
+  if (req.body.SKU || req.body.PLU || req.body.quantity || req.body.increment || req.body.price) {
+    next();
+  } else{
+    res
+      .status(500)
+      .json({
+        errorMessage: "A SKU, PLU, quantity, increment or price is required to update an item in your inventory"
+      });
   }
 }

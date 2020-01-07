@@ -7,7 +7,8 @@ function find() {
     "city",
     "state",
     "zipCode",
-    "profileImgURL"
+    "profileImgURL",
+    "farmImgURL"
   );
 }
 
@@ -21,7 +22,7 @@ function findById(id) {
   return db("farmers")
     .where({ id })
     .first()
-    .select("id", "username", "city", "state", "zipCode", "profileImgURL");
+    .select("id", "username", "city", "state", "zipCode", "profileImgURL", "farmImgURL");
 }
 function findReviewsById(id) {
   return db("reviews as r")

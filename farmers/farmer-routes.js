@@ -5,7 +5,7 @@ const express = require("express"),
   secrets = require("../config/secrets.js"),
   restricted = require("../middleware/auth-middleware.js"),
   router = express.Router(),
-  inventory=require('./inventory/routes.js');
+  inventory = require("./inventory/routes.js");
 
 router.get("/", restricted, (req, res) => {
   Farmers.find()
@@ -18,9 +18,17 @@ router.get("/", restricted, (req, res) => {
         .json({ errorMessage: "Unable to access users database!" });
     });
 });
-router.post("/register", (req, res) => {
-  const { username, password, profileImgURL, city, state, zipCode } = req.body;
-  const user = { username, profileImgURL, city, state, zipCode };
+router.post("/register", registerCheck, (req, res) => {
+  const {
+    username,
+    password,
+    profileImgURL,
+    farmImgURL,
+    city,
+    state,
+    zipCode
+  } = req.body;
+  const user = { username, profileImgURL, farmImgURL, city, state, zipCode };
   const hash = bcrypt.hashSync(password, 10);
   user.password = hash;
   Farmers.insert(user)
@@ -54,7 +62,15 @@ router.post("/login", (req, res) => {
     .then(user => {
       if (user && bcrypt.compareSync(password, user.password)) {
         const token = genToken(user);
-        const { id, username, city, state, zipCode, profileImgURL } = user;
+        const {
+          id,
+          username,
+          city,
+          state,
+          zipCode,
+          profileImgURL,
+          farmImgURL
+        } = user;
         res.status(200).json({
           user: {
             id,
@@ -62,7 +78,8 @@ router.post("/login", (req, res) => {
             city,
             state,
             zipCode,
-            profileImgURL
+            profileImgURL,
+            farmImgURL
           },
           token,
           message: `Welcome back ${user.username}`
@@ -125,7 +142,7 @@ router.get("/:id/reviews", restricted, (req, res) => {
       res.status(500).send("It's just not going to work out, sorry.");
     });
 });
-router.use('/:id/inventory', inventory);
+router.use("/:id/inventory", inventory);
 router.put("/:id", restricted, roleCheck, idCheck, (req, res) => {
   const editFarmer = req.body;
   const id = req.params.id;
@@ -199,5 +216,35 @@ function idCheck(req, res, next) {
       errorMessage:
         "You cannot update another Farmer's information, mind your own business!"
     });
+  }
+}
+function registerCheck(req, res, next) {
+  const { username, password, city, state, zipCode } = req.body;
+  if (username && password && city && state && zipCode) {
+    next();
+  } else if (!username) {
+    res
+      .status(500)
+      .json({
+        errorMessage: "A username is required to register a new farmer"
+      });
+  } else if (!password) {
+    res
+      .status(500)
+      .json({
+        errorMessage: "A password is required to register a new farmer"
+      });
+  } else if (!city) {
+    res
+      .status(500)
+      .json({ errorMessage: "A city is required to register a new farmer" });
+  } else if (!state) {
+    res
+      .status(500)
+      .json({ errorMessage: "A state is required to register a new farmer" });
+  } else if (!zipCode) {
+    res
+      .status(500)
+      .json({ errorMessage: "A zipCode is required to register a new farmer" });
   }
 }

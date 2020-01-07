@@ -87,7 +87,7 @@ router.delete("/", roleCheck, idCheck, (req, res) => {
       });
     });
 });
-router.get("/:sku", (req, res) => {
+router.get("/:sku", roleCheck, idCheck, (req, res) => {
   const { id, sku } = req.params;
   ShoppingCart.findBySKU(id, sku)
     .then(item => {
