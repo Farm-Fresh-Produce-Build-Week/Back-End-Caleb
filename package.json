@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watch",
+    "test": "cross-env DB_ENV=testing jest --watch",
     "server": "nodemon index.js",
     "start": "node index.js"
   },
+  "jest":{"testEnvironment":"node"},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/calebredd/lambda-backend-bw.git"
