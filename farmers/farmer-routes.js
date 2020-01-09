@@ -15,8 +15,15 @@ router.get("/", restricted, (req, res) => {
     .catch(err => {
       res
         .status(500)
-        .json({ errorMessage: "Unable to access users database!" });
+        .json({ errorMessage: "Unable to access farmers database!" });
     });
+});
+router.get("/names", (req, res) => {
+  Farmers.findNames().then(farmers => {
+    let farmerList = [];
+    farmers.map(farmer => farmerList.push(farmer.username));
+    res.status(200).json({ farmers: farmerList });
+  });
 });
 router.post("/register", registerCheck, (req, res) => {
   const {
@@ -223,17 +230,13 @@ function registerCheck(req, res, next) {
   if (username && password && city && state && zipCode) {
     next();
   } else if (!username) {
-    res
-      .status(500)
-      .json({
-        errorMessage: "A username is required to register a new farmer"
-      });
+    res.status(500).json({
+      errorMessage: "A username is required to register a new farmer"
+    });
   } else if (!password) {
-    res
-      .status(500)
-      .json({
-        errorMessage: "A password is required to register a new farmer"
-      });
+    res.status(500).json({
+      errorMessage: "A password is required to register a new farmer"
+    });
   } else if (!city) {
     res
       .status(500)

@@ -11,6 +11,11 @@ function find() {
     "farmImgURL"
   );
 }
+function findNames() {
+  return db("farmers").select(
+    "username"
+  );
+}
 
 function findByName(filter) {
   return db("farmers")
@@ -70,6 +75,7 @@ function remove(id) {
 
 module.exports = {
   find,
+  findNames,
   findByName,
   findReviewsById,
   findCommentsById,

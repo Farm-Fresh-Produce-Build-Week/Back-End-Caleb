@@ -10,6 +10,9 @@ function find() {
     "profileImgURL"
   );
 }
+function findNames() {
+  return db("users").select("username");
+}
 
 function findByName(filter) {
   // console.log(`Attempting to findByName of: ${filter}`);
@@ -46,4 +49,12 @@ function remove(id) {
   return findById(id).del();
 }
 
-module.exports = { find, findByName, findById, insert, update, remove };
+module.exports = {
+  find,
+  findNames,
+  findByName,
+  findById,
+  insert,
+  update,
+  remove
+};

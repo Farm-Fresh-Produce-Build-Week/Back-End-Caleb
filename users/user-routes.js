@@ -17,6 +17,13 @@ router.get("/", restricted, (req, res) => {
         .json({ errorMessage: "Unable to access users database!" });
     });
 });
+router.get("/names", (req, res) => {
+  Users.findNames().then(users => {
+    let userList=[];
+    users.map(user=>userList.push(user.username));
+    res.status(200).json({ users: userList });
+  });
+});
 router.use("/:id/cart", restricted, shoppingCart);
 router.post("/register", registerCheck, (req, res) => {
   const { username, password, profileImgURL, city, state, zipCode } = req.body;
