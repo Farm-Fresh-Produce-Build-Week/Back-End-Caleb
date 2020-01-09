@@ -5,6 +5,7 @@ const express = require("express"),
   secrets = require("../config/secrets.js"),
   restricted = require("../middleware/auth-middleware.js"),
   router = express.Router(),
+  blog=require('./blog/routes.js'),
   inventory = require("./inventory/routes.js");
 
 router.get("/", restricted, (req, res) => {
@@ -150,6 +151,7 @@ router.get("/:id/reviews", restricted, (req, res) => {
     });
 });
 router.use("/:id/inventory", inventory);
+router.use("/:id/blog", blog);
 router.put("/:id", restricted, roleCheck, idCheck, (req, res) => {
   const editFarmer = req.body;
   const id = req.params.id;
